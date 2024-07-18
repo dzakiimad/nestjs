@@ -18,7 +18,6 @@ import { AuthModule } from './auth/auth.module';
       password: 'RQTBj1IW0FAY',
       database: 'verceldb',
       autoLoadEntities: true,
-      synchronize: true
     }),
     AuthModule
   ],

@@ -26,7 +26,6 @@ exports.AppModule = AppModule = __decorate([
                 password: 'RQTBj1IW0FAY',
                 database: 'verceldb',
                 autoLoadEntities: true,
-                synchronize: true
             }),
             auth_module_1.AuthModule
         ],

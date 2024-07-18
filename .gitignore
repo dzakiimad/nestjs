@@ -1,4 +1,5 @@
 # compiled output
+!dist/.gitkeep
 /dist
 /node_modules
 /build

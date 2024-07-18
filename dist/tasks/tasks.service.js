@@ -31,8 +31,13 @@ let TasksService = class TasksService {
         if (search) {
             query.andWhere('(task.title ilike :search OR task.description ilike :search)', { search: `%${search}%` });
         }
-        const tasks = await query.getMany();
-        return tasks;
+        try {
+            const tasks = await query.getMany();
+            return tasks;
+        }
+        catch (error) {
+            console.log(error);
+        }
     }
     async createTask(CreateTaskDto, user) {
         const { title, description } = CreateTaskDto;
@@ -42,25 +47,45 @@ let TasksService = class TasksService {
             description,
             user
         });
-        await this.tasksRepository.save(task);
-        return task;
+        try {
+            await this.tasksRepository.save(task);
+            return task;
+        }
+        catch (error) {
+            console.log(error);
+        }
     }
     async getTaskById(id) {
-        const found = await this.tasksRepository.findOne({ where: { id } });
-        if (!found) {
-            throw new common_1.NotFoundException(`Task with id ${id} not found`);
+        try {
+            const found = await this.tasksRepository.findOne({ where: { id } });
+            if (!found) {
+                throw new common_1.NotFoundException(`Task with id ${id} not found`);
+            }
+            return found;
         }
-        return found;
+        catch (error) {
+            console.log(error);
+        }
     }
     async updateTask(id, status) {
-        const found = await this.getTaskById(id);
-        found.status = status;
-        await this.tasksRepository.save(found);
-        return found;
+        try {
+            const found = await this.getTaskById(id);
+            found.status = status;
+            await this.tasksRepository.save(found);
+            return found;
+        }
+        catch (error) {
+            console.log(error);
+        }
     }
     async deleteTask(id) {
-        const deleted = await this.tasksRepository.delete(id);
-        return deleted;
+        try {
+            const deleted = await this.tasksRepository.delete(id);
+            return deleted;
+        }
+        catch (error) {
+            console.log(error);
+        }
     }
 };
 exports.TasksService = TasksService;

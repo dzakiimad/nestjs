@@ -28,8 +28,14 @@ export class TasksService {
     if (search) {
       query.andWhere('(task.title ilike :search OR task.description ilike :search)', { search: `%${search}%` })
     }
-    const tasks = await query.getMany()
-    return tasks
+    try {
+      const tasks = await query.getMany()
+      return tasks
+
+    } catch (error) {
+      console.log(error);
+
+    }
   }
 
   async createTask(CreateTaskDto: CreateTaskDto, user: User): Promise<Task> {
@@ -41,34 +47,58 @@ export class TasksService {
       description,
       user
     })
+    try {
+      await this.tasksRepository.save(task)
+      return task
 
-    await this.tasksRepository.save(task)
-    return task
+    } catch (error) {
+      console.log(error);
+
+    }
   }
 
   async getTaskById(id: string): Promise<Task> {
-    const found = await this.tasksRepository.findOne({ where: { id } })
+    try {
 
-    if (!found) {
-      throw new NotFoundException(`Task with id ${id} not found`)
+      const found = await this.tasksRepository.findOne({ where: { id } })
+
+      if (!found) {
+        throw new NotFoundException(`Task with id ${id} not found`)
+      }
+
+      return found
+    } catch (error) {
+      console.log(error);
+
     }
-
-    return found
   }
 
   async updateTask(id: string, status: TaskStatus): Promise<Task> {
-    const found = await this.getTaskById(id)
+    try {
 
-    found.status = status
+      const found = await this.getTaskById(id)
 
-    await this.tasksRepository.save(found)
+      found.status = status
 
-    return found
+      await this.tasksRepository.save(found)
+
+      return found
+    } catch (error) {
+      console.log(error);
+
+    }
   }
 
 
   async deleteTask(id: string): Promise<DeleteResult> {
-    const deleted = await this.tasksRepository.delete(id)
-    return deleted
+    try {
+      const deleted = await this.tasksRepository.delete(id)
+      return deleted
+
+    } catch (error) {
+      console.log(error);
+
+    }
+
   }
 }

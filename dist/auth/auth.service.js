@@ -25,11 +25,11 @@ let AuthService = class AuthService {
         this.jwtService = jwtService;
     }
     async signUp(userCredentialDto) {
-        const { username, password } = userCredentialDto;
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
-        const user = this.userRepository.create({ username, password: hashedPassword });
         try {
+            const { username, password } = userCredentialDto;
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(password, salt);
+            const user = this.userRepository.create({ username, password: hashedPassword });
             await this.userRepository.save(user);
             return user;
         }
@@ -43,15 +43,20 @@ let AuthService = class AuthService {
         }
     }
     async signIn(authCredentialDto) {
-        const { username, password } = authCredentialDto;
-        const user = await this.userRepository.findOne({ where: { username } });
-        if (user && await bcrypt.compare(password, user.password)) {
-            const payload = { username };
-            const accessToken = this.jwtService.sign(payload);
-            return { accessToken };
+        try {
+            const { username, password } = authCredentialDto;
+            const user = await this.userRepository.findOne({ where: { username } });
+            if (user && await bcrypt.compare(password, user.password)) {
+                const payload = { username };
+                const accessToken = this.jwtService.sign(payload);
+                return { accessToken };
+            }
+            else {
+                throw new common_1.UnauthorizedException('Wrong password');
+            }
         }
-        else {
-            throw new common_1.UnauthorizedException('Wrong password');
+        catch (error) {
+            console.log(error);
         }
     }
 };

@@ -11,6 +11,9 @@ const common_1 = require("@nestjs/common");
 const tasks_module_1 = require("./tasks/tasks.module");
 const typeorm_1 = require("@nestjs/typeorm");
 const auth_module_1 = require("./auth/auth.module");
+const app_controller_1 = require("./app.controller");
+const app_service_1 = require("./app.service");
+const config_1 = require("@nestjs/config");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -18,17 +21,24 @@ exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
             tasks_module_1.TasksModule,
+            config_1.ConfigModule.forRoot({
+                envFilePath: '.env',
+            }),
             typeorm_1.TypeOrmModule.forRoot({
                 type: 'postgres',
-                host: 'ep-cool-mountain-a1p6mxqk-pooler.ap-southeast-1.aws.neon.tech',
-                port: 5432,
-                username: 'default',
-                password: 'RQTBj1IW0FAY',
-                database: 'verceldb',
-                autoLoadEntities: true,
+                host: process.env.DB_HOST,
+                port: +process.env.DB_PORT,
+                username: process.env.DB_USERNAME,
+                password: process.env.DB_PASSWORD,
+                database: process.env.DB_DATABASE,
+                extra: {
+                    ssl: true
+                }
             }),
             auth_module_1.AuthModule
         ],
+        controllers: [app_controller_1.AppController],
+        providers: [app_service_1.AppService],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map

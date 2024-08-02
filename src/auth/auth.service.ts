@@ -30,6 +30,8 @@ export class AuthService {
       if (error.code === '23505') {
         throw new ConflictException('Username already exists')
       } else {
+        console.log(error);
+
         throw new InternalServerErrorException()
       }
     }

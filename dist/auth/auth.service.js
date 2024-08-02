@@ -38,6 +38,7 @@ let AuthService = class AuthService {
                 throw new common_1.ConflictException('Username already exists');
             }
             else {
+                console.log(error);
                 throw new common_1.InternalServerErrorException();
             }
         }
